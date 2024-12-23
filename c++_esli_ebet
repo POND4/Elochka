@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+string toLowerCase(const string &str) {
+    string lowerStr = str;
+    transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+    return lowerStr;
+}
+
+int recurs (int left, int right, int guessing_num, int &steps){
+    
+    if (left > right){
+        cout << "Your number is outside the range!\n";
+        return -1; 
+    }
+    
+    
+    steps++;
+    
+    int mid = left + (right - left) /2;
+    cout << "Your number " << mid << "? (enter 'yes', 'higher', or 'lower' ): ";
+    string response;
+    cin >> response;
+    
+    response = toLowerCase(response);
+    
+    if (response == "yes"){ 
+        if (mid == guessing_num) {
+        return mid;
+    } 
+    else {
+        cout << "You're lying! I caught you!\n";
+        return -1;
+    }
+    }
+    
+    
+    else if (response == "higher" ){  
+        if(mid >= guessing_num){
+            cout << "You're lying! Your number can't be higher than " << mid << "!\n";
+            return -1;
+        }
+    return recurs(mid + 1, right, guessing_num, steps);
+    }
+    else if (response == "lower"){ 
+        if (mid <= guessing_num){
+            cout << "You're lying! Your number can't be lower than " << mid << "!\n";
+            return -1;
+        }
+        return recurs(left, mid - 1, guessing_num, steps);
+    } 
+    else{ 
+        cout << "Invalid input. Please answer 'yes', 'higher', or 'lower'.\n";
+        return recurs(left, right, guessing_num, steps); // Повторяем текущий шаг
+    }
+}
+
+int main(){
+    
+    int left = 0;
+    int right = 100;
+    int steps = 0;
+    int guessing_num;
+    
+    cout << "Let's play game!\n";
+    cout << "Think of a number between 0 and 100, and I'll guess it.\n";
+    cout << "Please enter your number: ";
+    
+    cin >> guessing_num;
+    
+    if (guessing_num < 0 || guessing_num > 100){
+        cout << "Invalid number as you";
+        return 0;    
+    }
+    
+    int result = recurs(left, right, guessing_num, steps);
+    
+    if (result != -1) {
+        cout << "I guessed your number! It's " << result << "!\n";
+        cout << "It took " << steps << " only steps to guess  number.\n";
+    }
+    else{
+        cout << "Game over, YOU LOST! \n";
+    }
+    
+}   
+
